@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from rest_framework.viewsets import ModelViewSet
+from . serializers import (
+    ClientListSerializer, ClientDetailSerializer, 
+    ContractSerializer, EventListSerializer, 
+    EventDetailSerializer, ContributorSerializer
+)
 
-# Create your views here.

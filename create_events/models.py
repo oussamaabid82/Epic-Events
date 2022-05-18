@@ -8,7 +8,7 @@ class Client(models.Model):
     phone_number = models.CharField(max_length=50)
     email = models.EmailField(max_length=150)
     contact_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='contacte_by')
-    contributor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='contributor')
+    contributor = models.ForeignKey('Contributor', on_delete=models.CASCADE, related_name='contributor')
 
     class Meta:
         unique_together = ('company_name', 'email')
@@ -28,9 +28,9 @@ class Event(models.Model):
 
 
 class Contributor(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    client = models.ForeignKey('Client', on_delete=models.CASCADE)
-    event = models.ForeignKey('Event', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_contributor')
+    client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='client')
+    event = models.ForeignKey('Event', on_delete=models.CASCADE, related_name='event_contributor')
     
     class Meta:
         unique_together = ('user', 'client', 'event')
