@@ -13,7 +13,8 @@ class UserSerializer(ModelSerializer):
             'first_name',
             'last_name',
             'email',
-            'password'
+            'password',
+            'team',            
         ]
         
     # encode password

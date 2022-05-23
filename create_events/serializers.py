@@ -1,5 +1,3 @@
-
-from attr import fields
 from rest_framework.serializers import ModelSerializer
 from create_events.models import Client, Contract, Event, Contributor
 
@@ -11,9 +9,11 @@ class ClientListSerializer(ModelSerializer):
         fields = [
             'id',
             'company_name',
-            'contact_by',
+            'address',
+            'phone_number',
+            'email',
         ]
-        
+
 
 class ClientDetailSerializer(ModelSerializer):
 
@@ -26,9 +26,9 @@ class ClientDetailSerializer(ModelSerializer):
             'phone_number',
             'email',
             'contact_by',
-            'contributor',
+            'client_type',
         ]
-        
+
 
 class ContractSerializer(ModelSerializer):
 
@@ -37,9 +37,12 @@ class ContractSerializer(ModelSerializer):
         fields = [
             'id',
             'signature_date',
+            'event_name',
             'client',
-            'event',
+            'start_date_event',
+            'end_date_event',
         ]
+
 
 
 class EventListSerializer(ModelSerializer):
@@ -64,12 +67,11 @@ class EventDetailSerializer(ModelSerializer):
             'start_date',
             'end_date',
             'contract',
-            'contributor',
         ]
 
 
 class ContributorSerializer(ModelSerializer):
-    
+
     class Meta:
         model = Contributor
         fields = [
