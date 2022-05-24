@@ -1,5 +1,3 @@
-from operator import contains
-from tkinter import Entry
 from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from . models import Client, Contract, Event, Contributor
@@ -51,14 +49,14 @@ class ContractViewSet(MultipleSerializerMixin, ModelViewSet):
             end_date=end_date,
             contract=contract
         )
-
+        
 
 class EventViewSet(MultipleSerializerMixin, ModelViewSet):
     serializer_class = EventListSerializer
     detail_serializer_class = EventDetailSerializer
 
     def get_queryset(self):
-        return Event.objects.all()
+        return Event.objects.filter(contract_id=self.kwargs['contract_pk'])
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
@@ -70,4 +68,4 @@ class ContributorViewSet(MultipleSerializerMixin, ModelViewSet):
     serializer_class = ContributorSerializer
 
     def get_queryset(self):
-        return Contributor.objects.all()
+        print (Contributor.objects.all())

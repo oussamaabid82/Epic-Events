@@ -15,19 +15,27 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
 
+from rest_framework import routers
+from rest_framework_nested import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from authentication.views import SignupViewset, UserViewset
-from create_events.views import ClientViewSet, EventViewSet, ContractViewSet
+from create_events.views import ClientViewSet, ContributorViewSet, EventViewSet, ContractViewSet
+
+
 
 router = routers.SimpleRouter()
 router.register('signup', SignupViewset, basename='signup')
+router.register('userlist', UserViewset, basename='userlist')
 router.register('clients', ClientViewSet, basename='clients')
 router.register('contracts', ContractViewSet, basename='contracts')
-router.register('events', EventViewSet, basename='events')
-router.register('userlist', UserViewset, basename='userlist')
+
+contract_router = routers.NestedSimpleRouter(router, r'contracts', lookup='contract')
+contract_router.register('events', EventViewSet, basename='events')
+
+router.register('contributors', ContributorViewSet, basename='contributors')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,4 +43,5 @@ urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('', include(router.urls)),
+    path('', include(contract_router.urls)),
 ]
