@@ -31,10 +31,15 @@ router.register('userlist', UserViewset, basename='userlist')
 router.register('clients', ClientViewSet, basename='clients')
 router.register('contracts', ContractViewSet, basename='contracts')
 
+"""
+Nested router:
+    -/contracts/{id}/events/{id}
+"""
 contract_router = routers.NestedSimpleRouter(router, r'contracts', lookup='contract')
-contract_router.register('events', EventViewSet, basename='events')
+contract_router.register(r'events', EventViewSet, basename='event_view')
 
-router.register('contributors', ContributorViewSet, basename='contributors')
+contributor_router = routers.NestedSimpleRouter(contract_router, r'events', lookup='event')
+contributor_router.register(r'contributors', ContributorViewSet, basename='contributors')
 
 
 urlpatterns = [
@@ -44,4 +49,5 @@ urlpatterns = [
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('', include(router.urls)),
     path('', include(contract_router.urls)),
+    path('', include(contributor_router.urls)),
 ]

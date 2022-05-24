@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from . models import Client, Contract, Event, Contributor
 from . serializers import (
-    ClientListSerializer, ClientDetailSerializer, ContractSerializer, 
-    EventListSerializer, EventDetailSerializer, ContributorSerializer
+    ClientListSerializer, ClientDetailSerializer, ContractSerializer, ContributorDetailSerializer, 
+    EventListSerializer, EventDetailSerializer, ContributorListSerializer
 )
 
 
@@ -56,6 +56,7 @@ class EventViewSet(MultipleSerializerMixin, ModelViewSet):
     detail_serializer_class = EventDetailSerializer
 
     def get_queryset(self):
+        # Afficher les evenements liéer au contrat
         return Event.objects.filter(contract_id=self.kwargs['contract_pk'])
 
     def get_serializer_class(self):
@@ -65,7 +66,22 @@ class EventViewSet(MultipleSerializerMixin, ModelViewSet):
 
 
 class ContributorViewSet(MultipleSerializerMixin, ModelViewSet):
-    serializer_class = ContributorSerializer
+    serializer_class = ContributorListSerializer
+    detail_serializer_class = ContributorDetailSerializer
 
     def get_queryset(self):
-        print (Contributor.objects.all())
+        return Contributor.objects.all()
+    
+    def perform_create(self, serializer):
+        event = Event.objects.filter(contract_id=self.kwargs['contract_pk'])
+        client = event[0].contract.client
+        event = event[0]
+        serializer.save(client=client, event=event)
+        
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return self.detail_serializer_class
+        return super().get_serializer_class()
+
+        
+        

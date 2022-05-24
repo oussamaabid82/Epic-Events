@@ -28,6 +28,7 @@ class ClientDetailSerializer(ModelSerializer):
             'contact_by',
             'client_type',
         ]
+        depth = 1
 
 
 class ContractSerializer(ModelSerializer):
@@ -68,9 +69,20 @@ class EventDetailSerializer(ModelSerializer):
             'end_date',
             'contract',
         ]
+        depth = 3
 
 
-class ContributorSerializer(ModelSerializer):
+class ContributorListSerializer(ModelSerializer):
+
+    class Meta:
+        model = Contributor
+        fields = [
+            'id',
+            'user',
+        ]
+        
+
+class ContributorDetailSerializer(ModelSerializer):
 
     class Meta:
         model = Contributor
