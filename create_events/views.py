@@ -70,7 +70,7 @@ class ContributorViewSet(MultipleSerializerMixin, ModelViewSet):
     detail_serializer_class = ContributorDetailSerializer
 
     def get_queryset(self):
-        return Contributor.objects.all()
+        return Contributor.objects.filter(event_id=self.kwargs['event_pk'])
     
     def perform_create(self, serializer):
         event = Event.objects.filter(contract_id=self.kwargs['contract_pk'])

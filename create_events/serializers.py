@@ -92,3 +92,4 @@ class ContributorDetailSerializer(ModelSerializer):
             'client',
             'event',
         ]
+        depth = 3
