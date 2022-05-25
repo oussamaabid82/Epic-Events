@@ -5,4 +5,14 @@ from . models import User_crm
 class IsManager(BasePermission):
     
     def has_permission(self, request, view):
-        return super().has_permission(request, view)
+
+        try:
+
+            if request.user.is_authenticated and request.user.is_superuser:
+                return True
+
+            if request.user.team == 'management':
+                return True
+
+        except Exception:
+            print ("Vous n'êtes pas autorisé")

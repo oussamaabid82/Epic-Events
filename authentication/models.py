@@ -4,9 +4,9 @@ from django.contrib.auth.models import AbstractUser
 
 class User_crm(AbstractUser):
     TEAM_CHOICES =[
-        ('SALES', 'sales'),
-        ('SUPPORT', 'support'),
-        ('MANAGEMENT','management'),
+        ('sales', 'SALES'),
+        ('support', 'SUPPORT'),
+        ('management','MANAGEMENT'),
     ]
     
     first_name = models.CharField(max_length=100)

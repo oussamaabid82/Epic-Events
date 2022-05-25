@@ -1,5 +1,6 @@
-from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
+from authentication.permissions import IsManager
+from . permissions import IsClientManager
 from . models import Client, Contract, Event, Contributor
 from . serializers import (
     ClientListSerializer, ClientDetailSerializer, ContractSerializer, ContributorDetailSerializer, 
@@ -17,6 +18,7 @@ class MultipleSerializerMixin:
 
 
 class ClientViewSet(MultipleSerializerMixin, ModelViewSet):
+    permission_classes = [IsClientManager]
     serializer_class = ClientListSerializer
     detail_serializer_class = ClientDetailSerializer
 
@@ -25,7 +27,8 @@ class ClientViewSet(MultipleSerializerMixin, ModelViewSet):
 
     def perform_create(self, serializer):
         # l'utilsateur connecter c'est l'agent commercial qui a contacter le client 
-        client = serializer.save(contact_by=self.request.user)
+        commercial_agent = serializer.save(contact_by=self.request.user)
+        client_type = serializer.save(type='client_potentiel')
 
 
 class ContractViewSet(MultipleSerializerMixin, ModelViewSet):
@@ -49,7 +52,10 @@ class ContractViewSet(MultipleSerializerMixin, ModelViewSet):
             end_date=end_date,
             contract=contract
         )
-        
+
+        # Mettre à jour le type de client  
+        client = Client.objects.filter(id=contract.client.id).update(type='client_existant')
+
 
 class EventViewSet(MultipleSerializerMixin, ModelViewSet):
     serializer_class = EventListSerializer
@@ -66,13 +72,18 @@ class EventViewSet(MultipleSerializerMixin, ModelViewSet):
 
 
 class ContributorViewSet(MultipleSerializerMixin, ModelViewSet):
+    
+    permission_classes = [IsManager]
     serializer_class = ContributorListSerializer
     detail_serializer_class = ContributorDetailSerializer
 
     def get_queryset(self):
+        
         return Contributor.objects.filter(event_id=self.kwargs['event_pk'])
     
     def perform_create(self, serializer):
+        
+        # Liéer un client et un événement à un contributor
         event = Event.objects.filter(contract_id=self.kwargs['contract_pk'])
         client = event[0].contract.client
         event = event[0]

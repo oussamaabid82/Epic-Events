@@ -1,10 +1,12 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+
+from authentication.permissions import IsManager
 
 from .models import User_crm
 from .serializers import UserSerializer
 
 
-class UserViewset(ModelViewSet):
+class UserViewset(ReadOnlyModelViewSet):
 
     serializer_class = UserSerializer
 
@@ -13,7 +15,7 @@ class UserViewset(ModelViewSet):
 
 
 class SignupViewset(ModelViewSet):
-
+    permission_classes = [IsManager]
     serializer_class = UserSerializer
 
     def get_queryset(self):

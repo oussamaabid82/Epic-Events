@@ -1,4 +1,8 @@
 from rest_framework.serializers import ModelSerializer
+from django.db.models import Q
+
+from authentication.serializers import UserSerializer
+from authentication.models import User_crm
 from create_events.models import Client, Contract, Event, Contributor
 
 
@@ -26,7 +30,7 @@ class ClientDetailSerializer(ModelSerializer):
             'phone_number',
             'email',
             'contact_by',
-            'client_type',
+            'type',
         ]
         depth = 1
 
@@ -74,6 +78,9 @@ class EventDetailSerializer(ModelSerializer):
 
 class ContributorListSerializer(ModelSerializer):
 
+    # user = User_crm.objects.filter(team='SUPPORT')
+    
+    # print(user)
     class Meta:
         model = Contributor
         fields = [
@@ -81,7 +88,7 @@ class ContributorListSerializer(ModelSerializer):
             'user',
         ]
         
-
+        
 class ContributorDetailSerializer(ModelSerializer):
 
     class Meta:

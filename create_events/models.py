@@ -4,11 +4,18 @@ from django.db import models
 
 class Client(models.Model):
 
+    CLIENT_TYPE = [
+        ('client_potentiel','CLIENT_POTENTIEL'),
+        ('client_existant', 'CLIENT_EXISTANT')
+    ]
+    
     company_name = models.CharField(max_length=200)
     address = models.CharField(max_length=500)
     phone_number = models.CharField(max_length=50)
     email = models.EmailField(max_length=150)
+    type = models.CharField(max_length=100, choices=CLIENT_TYPE)
     contact_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='contacte_by')
+    
     
     class Meta:
         unique_together = ('company_name', 'email')
