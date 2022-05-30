@@ -3,7 +3,7 @@ from django.db.models import Q
 
 from authentication.serializers import UserSerializer
 from authentication.models import User_crm
-from create_events.models import Client, Contract, Event, Contributor
+from create_events.models import Client, Contract, Event
 
 
 class ClientListSerializer(ModelSerializer):
@@ -12,10 +12,14 @@ class ClientListSerializer(ModelSerializer):
         model = Client
         fields = [
             'id',
+            'first_name',
+            'last_name',
+            'email',
+            'phone',
+            'mobil',
             'company_name',
             'address',
-            'phone_number',
-            'email',
+            'date_create'
         ]
 
 
@@ -25,17 +29,21 @@ class ClientDetailSerializer(ModelSerializer):
         model = Client
         fields = [
             'id',
+            'first_name',
+            'last_name',
+            'email',
+            'phone',
+            'mobil',
             'company_name',
             'address',
-            'phone_number',
-            'email',
-            'contact_by',
-            'type',
+            'date_create',
+            'sales_contact',
+            'type',            
         ]
         depth = 1
 
 
-class ContractSerializer(ModelSerializer):
+class ContractListSerializer(ModelSerializer):
 
     class Meta:
         model = Contract
@@ -46,9 +54,27 @@ class ContractSerializer(ModelSerializer):
             'client',
             'start_date_event',
             'end_date_event',
+            'amount',
+            'payement_due',
         ]
 
 
+class ContractDetailSerializer(ModelSerializer):
+
+    class Meta:
+        model = Contract
+        fields = [
+            'id',
+            'signature_date',
+            'event_name',
+            'client',
+            'sales_contact',
+            'start_date_event',
+            'end_date_event',
+            'amount',
+            'payement_due',
+        ]
+        depth = 2
 
 class EventListSerializer(ModelSerializer):
 
@@ -57,46 +83,43 @@ class EventListSerializer(ModelSerializer):
         fields = [
             'id',
             'event_name',
+            'client',
             'start_date',
             'end_date',
+            'support_contact',
         ]
-
+   
 
 class EventDetailSerializer(ModelSerializer):
+
+    support_contact = UserSerializer
+    print
+    
+    class Meta:
+        model = Event
+        fields = [
+            'id',
+            'event_name',
+            'client',
+            'start_date',
+            'end_date',
+            'support_contact',
+            'contract',
+            'note',
+        ]
+        depth = 3
+
+class EventDetailSalesSerializer(ModelSerializer):
 
     class Meta:
         model = Event
         fields = [
             'id',
             'event_name',
+            'client',
             'start_date',
             'end_date',
             'contract',
-        ]
-        depth = 3
-
-
-class ContributorListSerializer(ModelSerializer):
-
-    # user = User_crm.objects.filter(team='SUPPORT')
-    
-    # print(user)
-    class Meta:
-        model = Contributor
-        fields = [
-            'id',
-            'user',
-        ]
-        
-        
-class ContributorDetailSerializer(ModelSerializer):
-
-    class Meta:
-        model = Contributor
-        fields = [
-            'id',
-            'user',
-            'client',
-            'event',
+            'note',
         ]
         depth = 3

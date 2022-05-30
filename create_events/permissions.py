@@ -1,7 +1,8 @@
 from rest_framework.permissions import BasePermission
-from django.db.models import Q
+from rest_framework.exceptions import APIException
+
 from authentication.models import User_crm
-from create_events.models import Contributor
+from create_events.models import Client
 
 
 class IsClientManager(BasePermission):
@@ -12,21 +13,71 @@ class IsClientManager(BasePermission):
         SUPPORT_GRANTED_METHOD = ('GET')
 
         try:
-            user = Contributor.objects.get(
-                Q(client_id=view.kwargs['id']) & Q(user=request.user.username))
-            print(user)
+            user = User_crm.objects.get(username=request.user.username)
 
             if request.user.is_authenticated and request.user.is_superuser:
                 return True
-            
-            if request.user.team == 'management':
+
+            if request.user.is_authenticated and user.team =='management':
                 return True
 
-            if request.user.is_authenticated and request.user.team == 'SALES' and request.method in SALES_GRANTED_METHOD:
+            if request.user.is_authenticated and user.team =='sales' and request.method in SALES_GRANTED_METHOD:
                 return True
 
-            if request.user.is_authenticated and user.team == 'SUPPORT' and request.method in SUPPORT_GRANTED_METHOD:
+            if request.user.is_authenticated and user.team =='support' and request.method in SUPPORT_GRANTED_METHOD:
                 return True
 
-        except Exception:
-            print ("Vous n'êtes pas autorisé")
+        except User_crm.DoesNotExist:
+            raise APIException('You are not allowed.')
+
+
+class IsContractManager(BasePermission):
+
+    def has_permission(self, request, view):
+
+        SALES_GRANTED_METHOD = ('GET', 'POST')
+        SUPPORT_GRANTED_METHOD = ('GET')
+
+        try:
+            user = User_crm.objects.get(username=request.user.username)
+
+            if request.user.is_authenticated and request.user.is_superuser:
+                return True
+
+            if request.user.is_authenticated and user.team =='management':
+                return True
+
+            if request.user.is_authenticated and user.team =='sales' and request.method in SALES_GRANTED_METHOD:
+                return True
+
+            if request.user.is_authenticated and user.team =='support' and request.method in SUPPORT_GRANTED_METHOD:
+                return True
+
+        except User_crm.DoesNotExist:
+            raise APIException('You are not allowed.')
+
+
+class IsEventManager(BasePermission):
+
+    def has_permission(self, request, view):
+
+        SALES_GRANTED_METHOD = ('GET', 'PUT')
+        SUPPORT_GRANTED_METHOD = ('GET', 'PUT')
+
+        try:
+            user = User_crm.objects.get(username=request.user.username)
+
+            if request.user.is_authenticated and request.user.is_superuser:
+                return True
+
+            if request.user.is_authenticated and user.team =='management'and request.method in SALES_GRANTED_METHOD:
+                return True
+
+            if request.user.is_authenticated and user.team =='sales' and request.method in SALES_GRANTED_METHOD:
+                return True
+
+            if request.user.is_authenticated and user.team =='support' and request.method in SUPPORT_GRANTED_METHOD:
+                return True
+
+        except User_crm.DoesNotExist:
+            raise APIException('You are not allowed.')

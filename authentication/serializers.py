@@ -28,4 +28,4 @@ class UserSerializer(ModelSerializer):
             if str(symbol) in data['email'] or str(symbol) in data['first_name'] or str(symbol) in data['last_name']:
                 raise ValidationError('Symbol detected.')
         return data
-
+ 

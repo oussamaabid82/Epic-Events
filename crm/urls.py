@@ -21,7 +21,7 @@ from rest_framework_nested import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from authentication.views import SignupViewset, UserViewset
-from create_events.views import ClientViewSet, ContributorViewSet, EventViewSet, ContractViewSet
+from create_events.views import ClientViewSet, EventViewSet, ContractViewSet
 
 
 
@@ -38,10 +38,6 @@ Nested router:
 contract_router = routers.NestedSimpleRouter(router, r'contracts', lookup='contract')
 contract_router.register(r'events', EventViewSet, basename='event_view')
 
-contributor_router = routers.NestedSimpleRouter(contract_router, r'events', lookup='event')
-contributor_router.register(r'contributors', ContributorViewSet, basename='contributors')
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth', include('rest_framework.urls')),
@@ -49,5 +45,4 @@ urlpatterns = [
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('', include(router.urls)),
     path('', include(contract_router.urls)),
-    path('', include(contributor_router.urls)),
 ]

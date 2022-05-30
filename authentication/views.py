@@ -6,9 +6,10 @@ from .models import User_crm
 from .serializers import UserSerializer
 
 
-class UserViewset(ReadOnlyModelViewSet):
+class UserViewset(ModelViewSet):
 
     serializer_class = UserSerializer
+    permission_classes = [IsManager]
 
     def get_queryset(self):
         return User_crm.objects.all()
