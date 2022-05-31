@@ -21,8 +21,7 @@ from rest_framework_nested import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from authentication.views import SignupViewset, UserViewset
-from create_events.views import ClientViewSet, EventViewSet, ContractViewSet
-
+from create_events.views import ClientViewSet, EventViewSet, ContractViewSet, EventsListViewSet
 
 
 router = routers.SimpleRouter()
@@ -30,6 +29,7 @@ router.register('signup', SignupViewset, basename='signup')
 router.register('userlist', UserViewset, basename='userlist')
 router.register('clients', ClientViewSet, basename='clients')
 router.register('contracts', ContractViewSet, basename='contracts')
+router.register('eventslist', EventsListViewSet, basename='events_list')
 
 """
 Nested router:

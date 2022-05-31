@@ -1,5 +1,4 @@
-from rest_framework.serializers import ModelSerializer
-from django.db.models import Q
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from authentication.serializers import UserSerializer
 from authentication.models import User_crm
@@ -92,8 +91,8 @@ class EventListSerializer(ModelSerializer):
 
 class EventDetailSerializer(ModelSerializer):
 
-    support_contact = UserSerializer
-    print
+    # support_contact = SerializerMethodField()
+    # def get_support(self, team):
     
     class Meta:
         model = Event

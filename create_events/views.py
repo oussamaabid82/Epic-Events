@@ -1,7 +1,9 @@
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
+from django.db.models import Prefetch
+from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+
+from rest_framework.viewsets import ModelViewSet
 from authentication.models import User_crm
 from create_events.permissions import IsClientManager, IsContractManager, IsEventManager
 from . models import Client, Contract, Event
@@ -26,20 +28,21 @@ class ClientViewSet(MultipleSerializerMixin, ModelViewSet):
     serializer_class = ClientListSerializer
     detail_serializer_class = ClientDetailSerializer
     permission_classes = [IsClientManager]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['first_name', 'email']
     
     def get_queryset(self):
         
         user = self.request.user
         
-        event = Event.objects.get(support_contact=user)
-
         if user.team == 'management':  
             return Client.objects.all()
 
         elif user.team == 'sales':
             return Client.objects.filter(sales_contact=user)
         
-        elif user.team == 'support':
+        event = Event.objects.get(support_contact=user)
+        if user.team == 'support':
             return Client.objects.filter(id=event.client.id)
         
         
@@ -56,13 +59,14 @@ class ContractViewSet(MultipleSerializerMixin, ModelViewSet):
     serializer_class = ContractListSerializer
     detail_serializer_class = ContractDetailSerializer
     permission_classes = [IsContractManager]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['client__last_name', 'client__email', 'signature_date', 'amount']
     
     def get_queryset(self):
         
         user = self.request.user
         
         event = Event.objects.all()
-        print(event)
 
         if user.team == 'management':
             return Contract.objects.all()
@@ -103,11 +107,16 @@ class EventViewSet(MultipleSerializerMixin, ModelViewSet):
     detail_serializer_class = EventDetailSerializer
     detail_serializer_class_sales = EventDetailSalesSerializer
     permission_classes = [IsEventManager]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['client__last_name', 'client__email', 'start_date']
     
     def get_queryset(self):
+        user = self.request.user
+
         # Afficher les evenements liéer au contrat
         return Event.objects.filter(contract_id=self.kwargs['contract_pk'])
 
+        
     def get_serializer_class(self):
         
         user = self.request.user
@@ -118,6 +127,52 @@ class EventViewSet(MultipleSerializerMixin, ModelViewSet):
             return super().get_serializer_class()
 
         if user.team == 'sales':
+            if self.action == 'update':
+                return self.detail_serializer_class_sales
+            return super().get_serializer_class()
+        
+        if user.team == 'support':
+            if self.action == 'update':
+                return self.detail_serializer_class_sales
+            return super().get_serializer_class()
+        
+
+class EventsListViewSet(MultipleSerializerMixin, ModelViewSet):
+    serializer_class = EventListSerializer
+    detail_serializer_class = EventDetailSerializer
+    detail_serializer_class_sales = EventDetailSalesSerializer
+    permission_classes = [IsEventManager]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['client__last_name', 'client__email', 'start_date']
+    
+    def get_queryset(self):
+        user = self.request.user
+        
+        if user.team == 'management':
+            # Afficher tous evenements pour tous les utilisateurs de l'équipe management
+            return Event.objects.all()
+        
+        elif user.team == 'support':
+            # Afficher les événements liéer à l'utilisateur de l'équipe support 
+            return Event.objects.filter(support_contact=user)
+
+        raise PermissionDenied
+        
+    def get_serializer_class(self):
+        
+        user = self.request.user
+        
+        if user.team == 'management':
+            if self.action == 'retrieve':
+                return self.detail_serializer_class
+            return super().get_serializer_class()
+
+        # if user.team == 'sales':
+        #     if self.action == 'update':
+        #         return self.detail_serializer_class_sales
+        #     return super().get_serializer_class()
+        
+        if user.team == 'support':
             if self.action == 'update':
                 return self.detail_serializer_class_sales
             return super().get_serializer_class()
