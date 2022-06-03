@@ -40,17 +40,15 @@ Est une API qui aide a géré des événéménts
 		pip install -r requirements.txt
 		```
 
-	- Créer la migration des models dans la base des données en tapant dans votre terminal:
-		```bash
-		python manage.py migrate
+	
 		```
 
-### 3. Installer PostGreSQL
+### 3. Installation et configuration de la base de données PostGreSQL
 
 Téléchargement : 
 - [Download PostGreSQL](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
 
--[Comment bien configuré PostGreSQL](https://www.postgresqltutorial.com/postgresql-getting-started/) :
+- [Comment bien configuré PostGreSQL](https://www.postgresqltutorial.com/postgresql-getting-started/) :
 
 Sous SQL Shell:
 - server [localhost] : faire ENTRER
@@ -60,19 +58,17 @@ Sous SQL Shell:
 - Mot de passe pour l'utilisateur postgres : Entrez le mot de passe que vous avez saisi lors de l'installation
 - saisir et valider pour chaque ligne :
 ```
-  - CREATE DATABASE epic_event;
-  - CREATE USER epicevent_admin WITH ENCRYPTED PASSWORD 'openclassrooms00';
-  - GRANT ALL PRIVILEGES ON DATABASE epic_event TO epicevent_admin;
+  - CREATE DATABASE epic_events;
+  - CREATE USER admin_user WITH ENCRYPTED PASSWORD 'pass';
+  - GRANT ALL PRIVILEGES ON DATABASE epic_events TO admin_user;
 ```
-Dans le cas où le nom de la database ou celui de l'utilisateur sont différents de ceux ci-dessus, veillez à modifier les paramètres dans `epicevent/settings.py` dans la variable `DATABASE`.
 
 ## **Lancement du projet**
 
 ### 1. Lancer le serveur Django sous l'environnement virtuel, dans le terminal:
 
-Se positionner dans l'application LITReview:
+Se positionner dans l'application crm:
 
-`cd epicevent`
 
 Lancer le serveur :
 ```
@@ -82,16 +78,8 @@ py manage.py runserver
 ```
 
 ### 2. Fonctionnalités de l'API:
-L'application vous propose les fonctionnalités suivantes :
-- Créer des utilisateurs suivant 3 profiles : MANAGER, SALES, SUPPORT
-- suivant le profile de l'utilisateur connecté, il pourra :
-  - Des clients
-  - Des contrats
-  - Des évènements
- 
- Pour plus de détails :
- [Exigences fonctionnalités](https://s3-eu-west-1.amazonaws.com/course.oc-static.com/projects/Python+FR/P10+-+BDD/CRM+-+Exigences+fonctionnelles.pdf)
+ - Ouvrez votre navigateur web et taper http://127.0.0.1:8000/userlist/ dans la barre d'adresse pour accèder à l'API.
+ - Créer des utilisateurs qui appartiennes au differente équipe de la société
  
  ## Postman:
  
-    

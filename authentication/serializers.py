@@ -14,9 +14,9 @@ class UserSerializer(ModelSerializer):
             'last_name',
             'email',
             'password',
-            'team',            
+            'team',
         ]
-        
+
     # encode password
     def validate_password(self, value: str) -> str:
         return make_password(value)
@@ -28,4 +28,3 @@ class UserSerializer(ModelSerializer):
             if str(symbol) in data['email'] or str(symbol) in data['first_name'] or str(symbol) in data['last_name']:
                 raise ValidationError('Symbol detected.')
         return data
- 

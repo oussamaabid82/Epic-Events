@@ -1,0 +1,4 @@
+[flake8]
+ignore = F841,F811
+max-line-length = 120
+exclude = venv/*, migrations

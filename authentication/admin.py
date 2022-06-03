@@ -3,4 +3,3 @@ from . models import User_crm
 
 
 admin.site.register(User_crm)
-

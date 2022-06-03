@@ -1,9 +1,8 @@
 from rest_framework.permissions import BasePermission
-from . models import User_crm
 
 
 class IsManager(BasePermission):
-    
+
     def has_permission(self, request, view):
 
         try:
@@ -15,4 +14,4 @@ class IsManager(BasePermission):
                 return True
 
         except Exception:
-            print ("Vous n'êtes pas autorisé")
+            print("Vous n'êtes pas autorisé")

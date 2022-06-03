@@ -1,7 +1,7 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from datetime import datetime
+from django.forms import ValidationError
+from rest_framework.serializers import ModelSerializer
 
-from authentication.serializers import UserSerializer
-from authentication.models import User_crm
 from create_events.models import Client, Contract, Event
 
 
@@ -37,7 +37,7 @@ class ClientDetailSerializer(ModelSerializer):
             'address',
             'date_create',
             'sales_contact',
-            'type',            
+            'type',
         ]
         depth = 1
 
@@ -57,6 +57,26 @@ class ContractListSerializer(ModelSerializer):
             'payement_due',
         ]
 
+    def validate(self, data):
+
+        USER_DATETIME = datetime.now().strftime("%Y-%m-%d")
+
+        start_date = data['start_date_event']
+        end_date = data['end_date_event']
+        amount = data['amount']
+
+        if USER_DATETIME > str(start_date):
+            raise ValidationError('Vérifiez la date de debut')
+        print(start_date < end_date)
+
+        if str(start_date) > str(end_date):
+            raise ValidationError('Vérifiez la date de la fin')
+
+        if amount < 0:
+            raise ValidationError('Le montant dois etre positif')
+
+        return data
+
 
 class ContractDetailSerializer(ModelSerializer):
 
@@ -75,29 +95,49 @@ class ContractDetailSerializer(ModelSerializer):
         ]
         depth = 2
 
+    def validate(self, data):
+
+        USER_DATETIME = datetime.now().strftime("%Y-%m-%d")
+
+        start_date = data['start_date_event']
+        end_date = data['end_date_event']
+        amount = data['amount']
+
+        if USER_DATETIME > str(start_date):
+            raise ValidationError('Vérifiez la date de debut')
+
+        if str(start_date) > str(end_date):
+            raise ValidationError('Vérifiez la date de la fin')
+
+        if amount < 0:
+            raise ValidationError('Le montant dois etre positif')
+
+        return data
+
+
 class EventListSerializer(ModelSerializer):
 
     class Meta:
         model = Event
         fields = [
             'id',
+            'statu',
             'event_name',
             'client',
             'start_date',
             'end_date',
             'support_contact',
+            'note',
         ]
-   
+
 
 class EventDetailSerializer(ModelSerializer):
 
-    # support_contact = SerializerMethodField()
-    # def get_support(self, team):
-    
     class Meta:
         model = Event
         fields = [
             'id',
+            'statu',
             'event_name',
             'client',
             'start_date',
@@ -108,12 +148,14 @@ class EventDetailSerializer(ModelSerializer):
         ]
         depth = 3
 
+
 class EventDetailSalesSerializer(ModelSerializer):
 
     class Meta:
         model = Event
         fields = [
             'id',
+            'statu',
             'event_name',
             'client',
             'start_date',

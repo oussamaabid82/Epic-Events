@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'authentication',
     'create_events',
-    'django_filters',   
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -96,7 +96,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
 
 
 # Password validation
@@ -154,7 +153,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=180),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
@@ -165,7 +164,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'epic_events.log',
+            'filename': 'epic_events_log.log',
         },
     },
     'loggers': {

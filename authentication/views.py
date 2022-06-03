@@ -1,4 +1,4 @@
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.viewsets import ModelViewSet
 
 from authentication.permissions import IsManager
 
@@ -21,4 +21,3 @@ class SignupViewset(ModelViewSet):
 
     def get_queryset(self):
         return[]
-
