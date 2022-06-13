@@ -45,7 +45,7 @@ class Event(models.Model):
 
     event_name = models.CharField(max_length=150)
     client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='client')
-    start_date = models.DateField(auto_now_add=True)
+    start_date = models.DateField(auto_now_add=False)
     end_date = models.DateField(auto_now_add=False)
     support_contact = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,

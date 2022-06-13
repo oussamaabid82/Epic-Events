@@ -18,7 +18,8 @@ class ClientListSerializer(ModelSerializer):
             'mobil',
             'company_name',
             'address',
-            'date_create'
+            'date_create',
+            'sales_contact',
         ]
 
 
@@ -67,7 +68,6 @@ class ContractListSerializer(ModelSerializer):
 
         if USER_DATETIME > str(start_date):
             raise ValidationError('Vérifiez la date de debut')
-        print(start_date < end_date)
 
         if str(start_date) > str(end_date):
             raise ValidationError('Vérifiez la date de la fin')

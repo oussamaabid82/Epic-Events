@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.core.exceptions import PermissionDenied
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -148,10 +149,6 @@ class EventsListViewSet(MultipleSerializerMixin, ModelViewSet):
             return Event.objects.filter(support_contact=user)
 
         raise PermissionDenied
-
-    def perform_create(self, serializer):
-
-        print(serializer)
 
     def get_serializer_class(self):
 

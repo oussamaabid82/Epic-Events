@@ -82,4 +82,5 @@ py manage.py runserver
  - Créer des utilisateurs qui appartiennes au differente équipe de la société
  
  ## Postman:
+ [Documentations](https://documenter.getpostman.com/view/18701507/Uz5FJc7e)
  
